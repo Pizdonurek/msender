@@ -1,0 +1,104 @@
+<?php 
+if(!isset($_POST['test']) || getenv('HTTP_REFERER') != "http://dhost.info/pizdonurek/msender/")
+{
+  header("Location: http://dhost.info/pizdonurek/msender/");
+  exit;
+}
+require("config.php");
+$_POST['odbiorca'] = strtolower($_POST['odbiorca']);
+$_POST['nadawca'] = strtolower($_POST['nadawca']);
+$_POST['temat'] = strip_tags($_POST['temat']);
+$_POST['tresc'] = htmlspecialchars($_POST['tresc']);
+$ip = getenv('REMOTE_ADDR');
+$test = true;
+$sql = mysql_connect($host,$user,$password) or die(mysql_error());
+mysql_select_db($database);
+$zapytanie = "SELECT email FROM adresy WHERE (email='".$_POST['nadawca']."')";
+$wykonaj = mysql_query($zapytanie) or die(mysql_error());
+$wynik = mysql_fetch_array($wykonaj);
+if($wynik['email'] != "")
+{
+  $test = false;
+}
+$zapytanie = "SELECT email FROM adresy WHERE (email='".$_POST['odbiorca']."')";
+$wykonaj = mysql_query($zapytanie) or die(mysql_error());
+$wynik = mysql_fetch_array($wykonaj);
+if($wynik['email'] != "")
+{
+  
+  $host = gethostbyaddr($ip);
+  $_POST['tresc'] .= "\n[ Ten e-mail pochodzi z Mail Sendera v1.0 !]\n";
+  $_POST['tresc'] .= "Dane wysy³aj±cego:\nIP: ".$ip."\nHost: ".$host."\n";
+}
+if($test)
+{
+  switch($_POST['typ'])
+  {
+    case "0":
+    $contents = $_POST['tresc'];
+    $header = "From: ".$_POST['nadawca']."\r\n";
+    $header .= "Reply-To: ".$_POST['nadawca']."\r\n"; 
+    break;
+    case "1":
+    $format = "style=\"color: ".$_POST['kolor']."; text-align: ".$_POST['align'].";";
+	if($_POST['dec1'])
+    {
+      $format .= " font-weight: bold;";
+    }
+    if($_POST['dec2'])
+    {
+      $format .= " text-decoration: underline;";
+    }
+    if($_POST['dec3'])
+    {
+      $format .= " font-style: italic;";
+    }
+	$format .= " font-family: ".$_POST['font']."; font-size: ".$_POST['size']."pt;\"";
+	$contents = "<html><head><title>".$_POST['temat']."</title></head>";
+    $contents .= "<body><p ".$format.">".nl2br($_POST['tresc'])."</p></body></html>";
+    $header  = "MIME-Version: 1.0\r\n";
+    $header .= "Content-type: text/html; charset=".$_POST['kod']."\r\n";
+    $header .= "From: ".$_POST['nadawca']."\r\n";
+    $header .= "Reply-To: ".$_POST['nadawca']."\r\n";
+    break;    
+  }
+  if(mail($_POST['odbiorca'],$_POST['temat'],$contents,$header))
+  {
+    $zapytanie = "SELECT * FROM wyslane";
+	$wynik = mysql_query($zapytanie) or die(mysql_error());
+	if(!(mysql_num_rows($wynik) <  100))
+	{
+	  $zapytanie = "DELETE FROM wyslane";
+	  mysql_query($zapytanie) or die(mysql_error());
+	}
+	$zapytanie = "INSERT INTO wyslane VALUES ('','".date("Y-m-d")."','".$ip."','".$_POST['odbiorca']."','".$_POST['nadawca']."','".$_POST['temat']."','".$_POST['tresc']."')";
+	mysql_query($zapytanie) or die(mysql_error());
+	$licznik_id = getenv('SCRIPT_NAME'); 
+    $zapytanie ="SELECT * FROM licznik WHERE (name='".$licznik_id."')";
+    $wynik = mysql_query($zapytanie) or die(mysql_error()); 
+    $linia = mysql_fetch_array($wynik); 
+    if($linia)
+    { 
+      $zapytanie = "UPDATE licznik SET count=count+1 WHERE (name='".$licznik_id."')";
+      mysql_query($zapytanie) or die(mysql_error()); 
+      $count = $linia['count']+1; 
+    }
+    else
+    { 
+      $zapytanie = "INSERT INTO licznik VALUES ('','".$licznik_id."','2')";
+      mysql_query($zapytanie) or die(mysql_error()); 
+      $count = '1'; 
+    } 
+	$outtext = "<p style=\"color: #00CC00; font-weight: bold;\">Wiadomo¶æ zosta³a wys³ana.</p>\nTo jest ".$count." e-mail wys³any za pomoc± Msendera :D"; 
+  }
+  else
+  {
+    $outtext = "<p style=\"color: #CC0000; font-weight: bold;\">Wiadomo¶æ nie zosta³a wys³ana.</p>";
+  }
+}
+else
+{ 
+  $outtext = "<p style=\"color: #CC0000; font-weight: bold;\">Próbowa³e¶ wys³aæ wiadomo¶æ u¿ywaj±c zastrze¿onego adresu !</p>";
+}
+mysql_close($sql);
+?>

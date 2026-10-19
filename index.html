@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=iso-8859-2">
+<BASE HREF="http://dhost.info/krzywapicz/msender/">
+<TITLE>Mail Sender v1.07</TITLE>
+<STYLE TYPE="text/css">
+<!-- body { background-color: #FFFFFF; scrollbar-base-color: #FFFFFF; scrollbar-arrow-color: #000000; } table { width: 100%; } td { padding: 10px; text-align: center; color: #8D8D8D; font-family: Courier New, default; font-weight: normal; font-size: 12px; } a { text-decoration: none; color: #0000CC; } a:hover { text-decoration: underline; color: #CC0000; } #pole_0 {padding: 10px; text-align: center; color: #8D8D8D; font-family: Courier New, default; font-weight: normal; font-size: 12px; } #pole_1 { padding: 10px; text-align: center; color: #8D8D8D; font-family: Courier New, default; font-weight: normal; font-size: 12px; } #pole_2 { text-align: center; color: #8D8D8D; font-family: Courier New, default; font-weight: normal; font-size: 12px; } #pole_3 { padding: 10px; text-align: center; color: #8D8D8D; font-family: Courier New, default; font-weight: normal; font-size: 12px; } #pole_kolor { background-color: #000000; width: 27px; height: 23px; border: 1pt solid; } -->
+</STYLE>
+<SCRIPT TYPE="text/javascript" LANGUAGE="JavaScript">
+<!-- 
+var Lista_Status = false;
+function lista_on()
+{
+ if(Lista_Status == false)
+ {
+  document.forms[0].elements[4].disabled = false;
+  document.forms[0].elements[5].disabled = false;
+  document.forms[0].elements[6].disabled = false; 
+  document.forms[0].elements[7].disabled = false; 
+  document.forms[0].elements[8].disabled = false; 
+  document.forms[0].elements[9].disabled = false;
+  document.forms[0].elements[10].disabled = false;
+  document.forms[0].elements[11].disabled = false;
+  Lista_Status = true;
+ }
+}
+function lista_off()
+{
+ if(Lista_Status == true)
+ {
+  document.forms[0].elements[4].disabled = true;
+  document.forms[0].elements[5].disabled = true;
+  document.forms[0].elements[6].disabled = true; 
+  document.forms[0].elements[7].disabled = true; 
+  document.forms[0].elements[8].disabled = true; 
+  document.forms[0].elements[9].disabled = true;
+  document.forms[0].elements[10].disabled = true;
+  document.forms[0].elements[11].disabled = true;
+  Lista_Status = false;
+ }
+}
+function lista_alert()
+{
+ if(document.forms[0].kod.selectedIndex == 0)
+ {
+ tekst = 'Kodowanie polskich znaków w standardzie Windows CP nie jest zalecane!\n';
+ tekst += 'Użyj kodowania ISO-8859-2 lub Unicode.'
+ alert(tekst);
+ }
+}
+function showColor(target_id) 
+{
+ document.getElementById(target_id).style.backgroundColor = document.forms[0].kolor.options[document.forms[0].kolor.selectedIndex].value;
+}
+function sendingTest()
+{
+ if(document.forms[0].odbiorca.value == "")
+ {
+ alert("Brak adresata wiadomości - musisz uzupełnić pole !");
+ }
+ else
+ {
+ if(document.forms[0].odbiorca.value.indexOf("@",0) == -1)
+ {
+ alert("Podany adres jest nieprawidłowy - podaj prawidłowy adres !");
+ }
+ else
+ {
+ if(!(document.forms[0].temat.value == "" && !confirm("Wiadomość nie ma tematu - czy chcesz ją wysłać bez tematu ?")))
+ {
+ if(!(document.forms[0].nadawca.value == "" && !confirm("Wiadomość nie ma adresu nadawcy - czy mimo to chcesz ją wysłać?\nA może jednak coś tam wpiszesz :D")))
+ {
+ document.forms[0].submit();
+ }
+ } 
+ }
+ }
+}
+//-->
+</SCRIPT>
+</HEAD>
+<BODY>
+<DIV id="pole_0">
+<p>Oto Mail Sender v1.07 - skrypt PHP do wysyłania emaili.</p>
+<p>Pozornie nic nadzwyczajnego, bo co to za problem wysłać mail.
+Ale tylko pozornie - gdyż Mail sender umożliwia podanie dowolnego adresu
+nadawcy.Ujmując to inaczej możemy wysyłać maile podszywając się pod kogoś innego ;)
+Oszukać dała się nawet moja skrzynka mailowa, która nie przyjęła maili z Msendera,
+gdyż podany przeze mnie adres nadawcy nalezał do listy adresów zablokowanych...
+Możliwość wysyłania takich e-maili daje nam też telnet.Ale nie wszyscy umieją się nim posługiwać,
+w przeciwieństwie do Mail Sendera.Życzę więc dobrej zabawy :D
+(opcje formatowania są dostepne tylko dla tekstu w formacie HTML)</p>
+<p style="color: #FF0000;">Autor Mail Sendera nie ponosi odpowiedzialności za ewentualne
+szkody poczynione za pomocą wyżej wymienionego skryptu PHP.</p>
+<p>A dla zainteresowanych - tutaj macie <A HREF="proxy.html" TARGET="_blank">anonimowe proxy</A>...</p>
+</DIV>
+<FORM ACTION="msender.php" METHOD="post">
+<INPUT TYPE="hidden" NAME="test" VALUE="TRUE"/>
+<DIV id="pole_1">
+Adresat: <INPUT TYPE="text" NAME="odbiorca" SIZE="32"><br/>
+Temat: <INPUT TYPE="text" NAME="temat" SIZE="64" MAXLENGTH="255">
+</DIV>
+<DIV id="pole_2">
+Treść:<br/>
+<TEXTAREA NAME="tresc" ROWS="10" COLS="75">
+</TEXTAREA>
+<TABLE>
+<TBODY>
+<TR>
+<TD>
+Czcionka:
+<SELECT NAME="font" DISABLED>
+<OPTION VALUE="Arial" SELECTED>Arial</OPTION>
+<OPTION VALUE="Arial Black">Arial Black</OPTION>
+<OPTION VALUE="Courier">Courier</OPTION>
+<OPTION VALUE="Courier New">Courier New</OPTION>
+<OPTION VALUE="Helvetica">Helvetica</OPTION>
+<OPTION VALUE="Tahoma">Tahoma</OPTION>
+<OPTION VALUE="Times New Roman">Times New Roman</OPTION>
+<OPTION VALUE="Verdana">Verdana</OPTION>
+</SELECT>
+</TD>
+<TD>
+Rozmiar:
+<SELECT NAME="size" DISABLED>
+<OPTION VALUE="8">8</OPTION>
+<OPTION VALUE="10" SELECTED>10</OPTION>
+<OPTION VALUE="12">12</OPTION>
+<OPTION VALUE="14">14</OPTION>
+<OPTION VALUE="18">18</OPTION>
+<OPTION VALUE="24">24</OPTION>
+<OPTION VALUE="36">36</OPTION>
+</SELECT>
+</TD>
+<TD style="text-align: left;">
+<INPUT TYPE="checkbox" NAME="form_opt[0]" VALUE="1" DISABLED>pogrubienie<br/>
+<INPUT TYPE="checkbox" NAME="form_opt[1]" VALUE="1" DISABLED>podkreślenie<br/>
+<INPUT TYPE="checkbox" NAME="form_opt[2]" VALUE="1" DISABLED>kursywa
+</TD>
+<TD>
+Wyrównywanie:
+<SELECT NAME="align" DISABLED>
+<OPTION VALUE="left">left</OPTION>
+<OPTION VALUE="center">center</OPTION>
+<OPTION VALUE="right">right</OPTION>
+<OPTION VALUE="justify" SELECTED>justify</OPTION>
+</SELECT>
+</TD>
+</TR>
+<TR>
+<TD colspan="2" style="text-align: right;">
+Kolor czcionki: 
+<SELECT NAME="kolor" DISABLED onchange="showColor('pole_kolor')">
+<OPTION VALUE="#000000" style="color: #FFFFFF; background-color: #000000;">czarny</OPTION SELECTED>
+<OPTION VALUE="#800000" style="background-color: #800000;">kasztanowy</OPTION>
+<OPTION VALUE="#008000" style="background-color: #008000;">zielony</OPTION>
+<OPTION VALUE="#808000" style="background-color: #808000;">oliwkowy</OPTION>
+<OPTION VALUE="#000080" style="color: #808080; background-color: #000080;">granatowy</OPTION>
+<OPTION VALUE="#800080" style="background-color: #800080;">purpurowy</OPTION>
+<OPTION VALUE="#008080" style="background-color: #008080;">zielonomodry</OPTION>
+<OPTION VALUE="#808080" style="background-color: #808080;">szary</OPTION>
+<OPTION VALUE="#C0C0C0" style="background-color: #C0C0C0;">srebrny</OPTION>
+<OPTION VALUE="#FF0000" style="background-color: #FF0000;">czerwony</OPTION>
+<OPTION VALUE="#00FF00" style="background-color: #00FF00;">limonowy</OPTION>
+<OPTION VALUE="#FFFF00" style="background-color: #FFFF00;">żółty</OPTION>
+<OPTION VALUE="#0000FF" style="background-color: #0000FF;">niebieski</OPTION>
+<OPTION VALUE="#FF00FF" style="background-color: #FF00FF;">fuksja</OPTION>
+<OPTION VALUE="#00FFFF" style="background-color: #00FFFF;">akwamaryna</OPTION>
+<OPTION VALUE="#FFFFFF" style="background-color: #FFFFFF;">biały</OPTION>
+</SELECT>
+</TD>
+<TD colspan="2" style="text-align: left;">
+<DIV id="pole_kolor"></DIV>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+</DIV>
+<DIV id="pole_3">
+Wyślij jako:<BR/>
+<TABLE>
+<TBODY>
+<TR>
+<TD>Zwykły tekst<INPUT TYPE="radio" NAME="typ" VALUE="0" CHECKED onclick="lista_off()"></TD>
+<TD>Tekst w formacie HTML<INPUT TYPE="radio" NAME="typ" VALUE="1" onclick="lista_on()"></TD>
+<TD>Kodowanie: 
+<SELECT NAME="kod" DISABLED onchange="lista_alert()">
+<OPTION VALUE="windows-1250">Windows CP-1250</OPTION>
+<OPTION VALUE="utf-8">Unicode UTF-8</OPTION>
+<OPTION VALUE="iso-8859-1">ISO-8859-1</OPTION>
+<OPTION VALUE="iso-8859-2" SELECTED>ISO-8859-2</OPTION>
+<OPTION VALUE="iso-8859-3">ISO-8859-3</OPTION>
+<OPTION VALUE="iso-8859-4">ISO-8859-4</OPTION>
+<OPTION VALUE="iso-8859-5">ISO-8859-5</OPTION>
+<OPTION VALUE="iso-8859-6">ISO-8859-6</OPTION>
+<OPTION VALUE="iso-8859-7">ISO-8859-7</OPTION>
+<OPTION VALUE="iso-8859-8">ISO-8859-8</OPTION>
+<OPTION VALUE="iso-8859-9">ISO-8859-9</OPTION>
+</SELECT>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+<BR/>
+Nadawca: <INPUT TYPE="text" NAME="nadawca" SIZE="32"/><br/>
+<INPUT TYPE="button" VALUE="Wyślij" onclick="sendingTest()">
+<INPUT TYPE="button" VALUE="Wyczyść" onclick="document.forms[0].reset();">
+</DIV>
+</FORM>
+</BODY>
+</HTML>
